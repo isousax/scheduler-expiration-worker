@@ -466,7 +466,7 @@ async function sendExpirationEmail(opts: {
       <div class="logo">DEDICART</div>
       <p>Este é um e-mail automático. Por favor não responda diretamente.</p>
       <p>© ${new Date().getFullYear()} Dedicart - Todos os direitos reservados</p>
-      <p><a href="#" style="color: #6c757d; text-decoration: underline;">Política de Privacidade</a> | <a href="#" style="color: #6c757d; text-decoration: underline;">Termos de Uso</a></p>
+      <p><a href="https://dedicart.com.br/pt/privacidade" style="color: #6c757d; text-decoration: underline;">Política de Privacidade</a> | <a href="https://dedicart.com.br/pt/terms" style="color: #6c757d; text-decoration: underline;">Termos de Uso</a></p>
     </div>
   </div>
 </body>
