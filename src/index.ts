@@ -53,10 +53,10 @@ function daysBetween(dateA: Date, dateB: Date) {
 async function processExpiredIntentions(env: Env) {
   const nowIso = isoNow();
   const sqlIntentions = `
-    SELECT intention_id, email, plan, template_id, expires_at, expiration_notified_at
+    SELECT intention_id, email, plan, template_id, expires_in, expiration_notified_at
     FROM intentions
-    WHERE status = 'approved' AND expires_at IS NOT NULL AND expires_at <= ?
-    ORDER BY expires_at ASC
+    WHERE status = 'approved' AND expires_in IS NOT NULL AND expires_in <= ?
+    ORDER BY expires_in ASC
     LIMIT ${PROCESS_LIMIT}
   `;
   const resIntentions = await env.DB.prepare(sqlIntentions).bind(nowIso).all();
@@ -75,7 +75,7 @@ async function processExpiredIntentions(env: Env) {
       const email: string = row.email;
       const plan: string = (row.plan ?? '').toLowerCase();
       const templateId: string = String(row.template_id);
-      const expiresAt: string = row.expires_at;
+      const expiresAt: string = row.expires_in;
       const expiration_notified_at = row.expiration_notified_at ?? null;
 
       if (!intentionId || !templateId) {
