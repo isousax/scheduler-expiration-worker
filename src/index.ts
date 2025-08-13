@@ -259,7 +259,7 @@ async function sendExpirationEmail(opts: {
 		throw new Error(`Email inválido: ${to}`);
 	}
 
-	const renewUrl = `https://${site}/renew?id=${encodeURIComponent(intentionId)}`;
+	const renewUrl = `https://${site}/my-dedications`; //?id=${encodeURIComponent(intentionId)}`
 	const expirationDate = new Date(expiresAt).toLocaleDateString('pt-BR');
 	const subject = `❌ Sua dedicatória expirou - Renove agora`;
 
