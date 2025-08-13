@@ -26,6 +26,6 @@
 	],
 	"vars": {
 		"SITE_DNS": "dedicart.com.br",
-		"EMAIL_FROM": "<no-reply@dedicart.com.br>"
+		"EMAIL_FROM": "Dedicart <no-reply@dedicart.com.br>"
 	}
 }
