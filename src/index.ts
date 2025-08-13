@@ -15,7 +15,7 @@ const PROCESS_LIMIT = 200; // limite de intenções processadas por execução (
 
 export default {
   async scheduled(event: any, env: Env, ctx: ExecutionContext) {
-    console.log(`Scheduled run: ${new Date().toISOString()} (cron: ${event?.cron ?? 'manual'})`);
+    console.log(`Scheduler fired (cron = ${event?.cron ?? "unknown"}) - ${new Date().toISOString()}`);
     try {
       await ensureExpirationNotifiedColumn(env);
       await processExpiredIntentions(env);
