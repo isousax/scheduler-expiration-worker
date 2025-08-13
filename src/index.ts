@@ -2,7 +2,7 @@ import { templateLabels } from './util/templateLabels';
 
 export interface Env {
 	DB: D1Database;
-	ASSETS: R2Bucket;
+	R2: R2Bucket;
 	BREVO_API_KEY?: string;
 	EMAIL_FROM?: string; // ex: "Dedicart <no-reply@dedicart.com.br>"
 	EMAIL_REPLY_TO?: string; // opcional
@@ -156,8 +156,8 @@ async function processExpiredIntentions(env: Env) {
 			let allDeleted = true;
 			for (const key of r2Keys) {
 				try {
-					// env.ASSETS.delete lança se houver problema; se não lança, consideramos sucesso
-					await env.ASSETS.delete(key);
+					// env.R2.delete lança se houver problema; se não lança, consideramos sucesso
+					await env.R2.delete(key);
 					console.log(`R2 delete key=${key} => OK`);
 				} catch (err) {
 					console.error(`Erro ao deletar R2 key=${key} para intention ${intentionId}:`, err);
