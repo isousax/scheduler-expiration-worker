@@ -77,7 +77,7 @@ async function processExpiredIntentions(env: Env) {
 			const templateId: string = String(row.template_id);
 			const expiresAt: string = row.expires_in;
 			const expiration_notified_at = row.expiration_notified_at ?? null;
-			const qrPublicUrl: string | null = row.qr_code ?? row.QR_CODE ?? null;
+			const qrPublicUrl: string | null = row.qr_code ?? null;
 
 			if (!intentionId || !templateId) {
 				console.warn(`Linha inválida (falta intention_id ou template_id):`, row);
