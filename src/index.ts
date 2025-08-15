@@ -291,7 +291,71 @@ async function sendExpirationEmail(opts: {
 	const subject = `❌ Sua dedicatória expirou - Renove agora`;
 
 	// html omitido aqui por brevidade — mantenha o template que você já usa
-	const html = `<p>Sua dedicatória expirou em ${expirationDate} - renove em ${renewUrl}</p>`;
+	const html = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua dedicatória expirou</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); .email-container { max-width: 650px; margin: 0 auto; font-family: 'Poppins', Arial, sans-serif; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08); } .header { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); padding: 40px 30px; text-align: center; color: white; } .header h1 { font-size: 32px; font-weight: 700; margin: 0 0 10px; } .header p { font-size: 18px; opacity: 0.9; margin: 0; } .content { padding: 40px 30px; color: #333333; line-height: 1.6; } .expired-info { background: #fff8f8; border-left: 4px solid #ff6b6b; padding: 20px; border-radius: 0 8px 8px 0; margin: 25px 0; } .cta-container { text-align: center; margin: 40px 0; } .cta-button { display: inline-block; padding: 18px 45px; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); color: white !important; text-decoration: none; font-weight: 600; font-size: 18px; border-radius: 50px; box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3); transition: all 0.3s ease; } .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4); } .benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 40px 0; } .benefit-card { background: #f8f9ff; border-radius: 12px; padding: 25px; text-align: center; transition: transform 0.3s ease; } .benefit-card:hover { transform: translateY(-5px); } .benefit-icon { font-size: 36px; margin-bottom: 15px; color: #6a11cb; } .discount-badge { background: #ffeb3b; color: #333; padding: 8px 20px; border-radius: 50px; display: inline-block; font-weight: 600; margin: 15px 0; animation: pulse 2s infinite; } .contact { background: #f0f7ff; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0; } .footer { background: #f8f9fa; padding: 25px; text-align: center; color: #6c757d; font-size: 13px; } .logo { color: #2575fc; font-weight: 700; font-size: 22px; letter-spacing: 1px; margin-bottom: 15px; } @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 20px; background: #f5f7ff;">
+    <div class="email-container">
+        <div class="header">
+            <h1>📅 Sua dedicatória expirou!</h1>
+            <p>Renove agora para manter sua mensagem especial disponível</p>
+        </div>
+        <div class="content">
+            <p>Olá,</p>
+            <div class="expired-info">
+                <p>Sua dedicatória no modelo <strong>${templateLabels(
+									templateLabels(templateId)
+								)}</strong> expirou em <strong>${expirationDate}</strong>.</p>
+            </div>
+            <p style="font-size: 18px; text-align: center;">✨ <em>"As melhores mensagens merecem permanecer vivas"</em></p>
+            <div class="cta-container">
+                <p>Renove agora e mantenha sua dedicatória ativa por mais 1 ano!</p> <a href="${renewUrl}" class="cta-button"> RENOVAR MINHA DEDICATÓRIA </a> </div>
+            <div class="discount-badge"> ⏰ OFERECEMOS 10% DE DESCONTO PARA RENOVAÇÕES NAS PRÓXIMAS 48 HORAS! </div>
+            <h2 style="text-align: center; margin-top: 40px;">Por que renovar sua dedicatória?</h2>
+            <div class="benefits">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔗</div>
+                    <h3>Link Ativo</h3>
+                    <p>Mantenha seu link permanente para compartilhar quando quiser</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💌</div>
+                    <h3>Memórias Preservadas</h3>
+                    <p>Guarde essa mensagem especial para sempre</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎁</div>
+                    <h3>Vantagens Exclusivas</h3>
+                    <p>Acesso a recursos premium e novas funcionalidades</p>
+                </div>
+            </div>
+            <div class="contact">
+                <h3>Precisa de ajuda?</h3>
+                <p>Estamos aqui para te ajudar com qualquer dúvida ou problema!</p>
+                <p>Entre em contato: <strong>dedicart.help@gmail.com</strong></p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="logo">DEDICART</div>
+            <p>Este é um e-mail automático. Por favor não responda diretamente.</p>
+            <p>© ${new Date().getFullYear()} Dedicart - Todos os direitos reservados</p>
+            <p><a href="https://dedicart.com.br/pt/privacidade" style="color: #6c757d; text-decoration: underline;">Política de Privacidade</a> | <a href="https://dedicart.com.br/pt/terms" style="color: #6c757d; text-decoration: underline;">Termos de Uso</a></p>
+        </div>
+    </div>
+</body>
+
+</html>`
+;
 
 	const sender = parseSender(from);
 	const payload: any = {
@@ -320,13 +384,17 @@ async function sendExpirationEmail(opts: {
 		});
 
 		if (res.ok) {
-			try { return await res.json(); } catch { return {}; }
+			try {
+				return await res.json();
+			} catch {
+				return {};
+			}
 		}
 
 		if (res.status === 429 || res.status >= 500) {
 			const backoff = 500 * attempt;
 			console.warn(`Brevo response ${res.status} — retrying after ${backoff}ms (attempt ${attempt})`);
-			await new Promise(r => setTimeout(r, backoff));
+			await new Promise((r) => setTimeout(r, backoff));
 			continue;
 		}
 
