@@ -90,8 +90,13 @@ async function processExpiredIntentions(env: Env) {
 			}
 
 			//Altera status da dedicatória para expirado
-			await updateStatusInDB(intentionId, 'expired', env);
-
+			try {
+				await updateStatusInDB(intentionId, templateId, 'expired', env);
+			} catch (err) {
+				console.error(`Erro ao atualizar status para expired para intention ${intentionId}:`, err);
+				continue;
+			}
+			
 			// Buscar form_data na tabela do template (se existir)
 			const sqlTemplate = `SELECT form_data FROM ${templateId} WHERE intention_id = ? LIMIT 1`;
 			let formRowRes: any;
@@ -197,9 +202,10 @@ async function processExpiredIntentions(env: Env) {
 	} // fim for
 }
 
-
-function updateStatusInDB(intentionId: string, status: string, env: Env) {
-	return env.DB.prepare(`UPDATE intentions SET status = ? WHERE intention_id = ?`).bind(status, intentionId).run();
+function updateStatusInDB(intentionId: string, template_id: string, status: string, env: Env) {
+	env.DB.prepare(`UPDATE intentions SET status = ? WHERE intention_id = ?`).bind(status, intentionId).run();
+	env.DB.prepare(`UPDATE ${template_id} SET status = ? WHERE intention_id = ?`).bind(status, intentionId).run();
+	return;
 }
 
 /** procura por propriedades 'preview' ou strings que parecem ser URLs de imagens dentro do objeto */
@@ -362,9 +368,7 @@ async function sendExpirationEmail(opts: {
     </div>
 </body>
 
-</html>`
-;
-
+</html>`;
 	const sender = parseSender(from);
 	const payload: any = {
 		sender,
