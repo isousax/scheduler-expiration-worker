@@ -10,7 +10,7 @@ export interface Env {
 }
 
 const DAYS_STANDARD_TTL = 30; // dias após expiração para standard/basic
-const DAYS_PREMIUM_TTL = 365; // dias após expiração para premium (1 ano)
+const DAYS_PREMIUM_TTL = 60; // dias após expiração para premium (2 meses)
 const PROCESS_LIMIT = 200; // limite de intenções processadas por execução (ajuste conforme necessidade)
 
 export default {
@@ -88,6 +88,9 @@ async function processExpiredIntentions(env: Env) {
 				console.warn(`Template id inválido ou perigoso: ${templateId} — pulando intenção ${intentionId}`);
 				continue;
 			}
+
+			//Altera status da dedicatória para expirado
+			await updateStatusInDB(intentionId, 'expired', env);
 
 			// Buscar form_data na tabela do template (se existir)
 			const sqlTemplate = `SELECT form_data FROM ${templateId} WHERE intention_id = ? LIMIT 1`;
@@ -192,6 +195,11 @@ async function processExpiredIntentions(env: Env) {
 			console.error('Erro processando intention row:', err);
 		}
 	} // fim for
+}
+
+
+function updateStatusInDB(intentionId: string, status: string, env: Env) {
+	return env.DB.prepare(`UPDATE intentions SET status = ? WHERE intention_id = ?`).bind(status, intentionId).run();
 }
 
 /** procura por propriedades 'preview' ou strings que parecem ser URLs de imagens dentro do objeto */
